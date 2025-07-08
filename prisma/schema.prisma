@@ -1,0 +1,160 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  creator
+  user
+}
+
+enum ComicStatus {
+  ongoing
+  completed
+  hiatus
+}
+
+enum EpisodeType {
+  free
+  premium
+}
+
+model Profile {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  username    String   @unique
+  displayName String?
+  avatarUrl   String?
+  bio         String?
+  role        UserRole @default(user)
+  coins       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  comics       Comic[]           @relation("AuthorComics")
+  bookmarks    Bookmark[]
+  comments     Comment[]
+  likes        Like[]
+  transactions CoinTransaction[]
+}
+
+model Comic {
+  id          String      @id @default(uuid())
+  title       String
+  description String?
+  coverUrl    String?
+  status      ComicStatus @default(ongoing)
+  tags        String[]
+  viewCount   Int         @default(0)
+  likeCount   Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  authorId String?
+  author   Profile? @relation("AuthorComics", fields: [authorId], references: [id])
+
+  episodes  Episode[]
+  bookmarks Bookmark[]
+  likes     Like[]
+  rankings  Ranking[]
+}
+
+model Episode {
+  id            String      @id @default(uuid())
+  comicId       String
+  title         String
+  episodeNumber Int
+  contentUrl    String?
+  type          EpisodeType @default(free)
+  coinCost      Int         @default(0)
+  viewCount     Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  comic        Comic             @relation(fields: [comicId], references: [id])
+  bookmarks    Bookmark[]
+  comments     Comment[]
+  transactions CoinTransaction[]
+
+  @@unique([comicId, episodeNumber])
+}
+
+model Bookmark {
+  id                String  @id @default(uuid())
+  userId            String
+  comicId           String
+  lastReadEpisodeId String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user            Profile  @relation(fields: [userId], references: [id])
+  comic           Comic    @relation(fields: [comicId], references: [id])
+  lastReadEpisode Episode? @relation(fields: [lastReadEpisodeId], references: [id])
+
+  @@unique([userId, comicId])
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  userId    String
+  episodeId String
+  content   String
+  parentId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    Profile   @relation(fields: [userId], references: [id])
+  episode Episode   @relation(fields: [episodeId], references: [id])
+  parent  Comment?  @relation("ReplyTo", fields: [parentId], references: [id])
+  replies Comment[] @relation("ReplyTo")
+
+  @@index([parentId])
+  @@index([episodeId, parentId])
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  comicId   String
+  createdAt DateTime @default(now())
+
+  user  Profile @relation(fields: [userId], references: [id])
+  comic Comic   @relation(fields: [comicId], references: [id])
+
+  @@unique([userId, comicId])
+}
+
+model CoinTransaction {
+  id              String   @id @default(uuid())
+  userId          String
+  amount          Int
+  transactionType String
+  description     String?
+  episodeId       String?
+  createdAt       DateTime @default(now())
+
+  user    Profile  @relation(fields: [userId], references: [id])
+  episode Episode? @relation(fields: [episodeId], references: [id])
+}
+
+model Ranking {
+  id           String   @id @default(uuid())
+  comicId      String
+  rankType     String // daily, weekly, monthly, all_time
+  rankPosition Int
+  scoreValue   Int      @default(0)
+  periodStart  DateTime
+  periodEnd    DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  comic Comic @relation(fields: [comicId], references: [id])
+
+  @@unique([comicId, rankType, periodStart])
+}
