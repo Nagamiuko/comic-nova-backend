@@ -24,6 +24,31 @@ enum EpisodeType {
   premium
 }
 
+model User {
+  id                String         @id @default(uuid())
+  email             String         @unique
+  password          String
+  isVerified        Boolean        @default(false)
+  otp               String? // สำหรับ OTP ยืนยันอีเมล
+  otpExpires        DateTime?
+  verificationToken String?
+  refreshTokens     RefreshToken[]
+  resetToken        String?
+  resetTokenExpiry  DateTime?
+  profile           Profile?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+}
+
 model Profile {
   id          String   @id @default(uuid())
   userId      String   @unique
@@ -36,6 +61,7 @@ model Profile {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  user         User              @relation(fields: [userId], references: [id])
   comics       Comic[]           @relation("AuthorComics")
   bookmarks    Bookmark[]
   comments     Comment[]
@@ -86,30 +112,30 @@ model Episode {
 
 model Bookmark {
   id                String  @id @default(uuid())
-  userId            String
+  profileId         String
   comicId           String
   lastReadEpisodeId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user            Profile  @relation(fields: [userId], references: [id])
+  profile         Profile  @relation(fields: [profileId], references: [id])
   comic           Comic    @relation(fields: [comicId], references: [id])
   lastReadEpisode Episode? @relation(fields: [lastReadEpisodeId], references: [id])
 
-  @@unique([userId, comicId])
+  @@unique([profileId, comicId])
 }
 
 model Comment {
   id        String   @id @default(uuid())
-  userId    String
+  profileId String
   episodeId String
   content   String
   parentId  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  user    Profile   @relation(fields: [userId], references: [id])
+  profile Profile   @relation(fields: [profileId], references: [id])
   episode Episode   @relation(fields: [episodeId], references: [id])
   parent  Comment?  @relation("ReplyTo", fields: [parentId], references: [id])
   replies Comment[] @relation("ReplyTo")
@@ -120,26 +146,26 @@ model Comment {
 
 model Like {
   id        String   @id @default(uuid())
-  userId    String
+  profileId String
   comicId   String
   createdAt DateTime @default(now())
 
-  user  Profile @relation(fields: [userId], references: [id])
-  comic Comic   @relation(fields: [comicId], references: [id])
+  profile Profile @relation(fields: [profileId], references: [id])
+  comic   Comic   @relation(fields: [comicId], references: [id])
 
-  @@unique([userId, comicId])
+  @@unique([profileId, comicId])
 }
 
 model CoinTransaction {
   id              String   @id @default(uuid())
-  userId          String
+  profileId       String
   amount          Int
-  transactionType String
+  transactionType String // e.g. "topup", "purchase"
   description     String?
   episodeId       String?
   createdAt       DateTime @default(now())
 
-  user    Profile  @relation(fields: [userId], references: [id])
+  profile Profile  @relation(fields: [profileId], references: [id])
   episode Episode? @relation(fields: [episodeId], references: [id])
 }
 
