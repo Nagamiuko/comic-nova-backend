@@ -73,7 +73,8 @@ model Comic {
   id          String      @id @default(uuid())
   title       String
   description String?
-  coverUrl    String?
+  coverUrl1   String[]
+  coverUrl2   String[]
   status      ComicStatus @default(ongoing)
   tags        String[]
   viewCount   Int         @default(0)

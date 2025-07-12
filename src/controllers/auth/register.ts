@@ -4,11 +4,15 @@ import bcrypt from 'bcrypt'
 import { PrismaClient } from '@prisma/client'
 import { v4 as uuidv4 } from 'uuid'
 import { sendEmailVerification } from '@/services/emailService'
+import { User } from '@/types/user'
 
 const prisma = new PrismaClient()
 
-export async function register(req: Request, res: Response) {
+export async function register(req: Request, res: Response): Promise<any> {
   const { email, password, username } = req.body
+
+  console.log(username);
+
 
   // ตรวจสอบว่า email มีอยู่แล้วใน user หรือยัง
   const existingUser = await prisma.user.findUnique({ where: { email } })
@@ -22,14 +26,14 @@ export async function register(req: Request, res: Response) {
 
   try {
     // สร้าง User + Profile
-    const newUser = await prisma.user.create({
+    await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         verificationToken,
         profile: {
           create: {
-            username,
+            username: username,
           },
         },
       },

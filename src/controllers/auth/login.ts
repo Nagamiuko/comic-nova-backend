@@ -2,11 +2,11 @@
 import { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
 import bcrypt from 'bcrypt'
-import { generateAccessToken, generateRefreshToken } from '@/utils/token'
+import { generateAccessToken, generateRefreshToken, sendToken } from '@/utils/token'
 
 const prisma = new PrismaClient()
 
-export async function login(req: Request, res: Response) {
+export async function login(req: Request, res: Response): Promise<any> {
   const { email, password } = req.body
 
   // ค้นหาผู้ใช้จากตาราง User พร้อมโหลด Profile
@@ -38,9 +38,5 @@ export async function login(req: Request, res: Response) {
     },
   })
 
-  return res.status(200).json({
-    accessToken,
-    refreshToken,
-    profile: user.profile,
-  })
+  return sendToken(user, 200, res);
 }

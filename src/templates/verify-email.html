@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>ยืนยันอีเมล - ComicNova</title>
+  <style>
+    body {
+      font-family: 'Sarabun', sans-serif;
+      background: #111;
+      color: #fff;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 32px;
+      background: #222;
+      border-radius: 8px;
+    }
+
+    h1 {
+      color: #00e0ff;
+    }
+
+    a.button {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #00e0ff;
+      color: #000;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>ยืนยันอีเมลของคุณ</h1>
+    <p>สวัสดี {{username}},</p>
+    <p>ขอบคุณที่สมัครใช้งาน ComicNova! กรุณาคลิกปุ่มด้านล่างเพื่อยืนยันอีเมลของคุณ:</p>
+    <a href="{{verifyUrl}}" class="button">ยืนยันอีเมล</a>
+    <p>หากคุณไม่ได้เป็นผู้ลงทะเบียน กรุณาเพิกเฉยอีเมลนี้</p>
+  </div>
+</body>
+
+</html>

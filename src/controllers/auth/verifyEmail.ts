@@ -4,8 +4,11 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-export async function verifyEmail(req: Request, res: Response) {
+export async function verifyEmail(req: Request, res: Response): Promise<any> {
   const token = req.query.token as string
+
+  console.log(token);
+
 
   if (!token) {
     return res.status(400).json({ message: 'Token is required' })

@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import { PrismaClient } from "@prisma/client"
+import { verifyAccessToken } from "@/utils/token"
 
 const prisma = new PrismaClient()
 
@@ -57,3 +58,39 @@ export async function getUser(req: Request, res: Response) {
     res.status(500).json({ message: "Error fetching user" })
   }
 }
+
+export const userData = async (req, res, next) => {
+  const { userId } = req.query;
+  try {
+    const ids = verifyAccessToken(userId);
+    console.log(ids);
+    const user = await prisma.user.findFirst({
+      where: { id:  ids },
+      select: {
+        id: true,
+        email: true,
+        isVerified: true,
+        createdAt: true,
+        profile: {
+          select: {
+            username: true,
+            displayName: true,
+            avatarUrl: true,
+            role: true
+          }
+        }
+      }
+    })
+    if (!user) {
+      return next(new ErrorHandler("User doesn't exists", 400));
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
