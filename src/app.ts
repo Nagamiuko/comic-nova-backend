@@ -3,6 +3,8 @@ import cors from "cors";
 import routes from "@/routes/route";
 import user from "@/routes/user.route";
 import product from "@/routes/product.route"
+import comments from "@/routes/comment.route"
+import comic from "@/routes/comic.route"
 
 const app = express();
 
@@ -17,5 +19,6 @@ app.use(express.json());
 app.use("/api", routes);
 app.use("/api", user);
 app.use("/api", product);
+app.use("/api", comments);
 
 export default app;

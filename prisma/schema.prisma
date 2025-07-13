@@ -89,6 +89,7 @@ model Comic {
   bookmarks Bookmark[]
   likes     Like[]
   rankings  Ranking[]
+  comments  Comment[]
 }
 
 model Episode {
@@ -96,12 +97,13 @@ model Episode {
   comicId       String
   title         String
   episodeNumber Int
-  contentUrl    String?
   type          EpisodeType @default(free)
   coinCost      Int         @default(0)
   viewCount     Int         @default(0)
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
+
+  contentImages EpisodeImage[] // 🔗 ความสัมพันธ์กับภาพแต่ละภาพ
 
   comic        Comic             @relation(fields: [comicId], references: [id])
   bookmarks    Bookmark[]
@@ -109,6 +111,18 @@ model Episode {
   transactions CoinTransaction[]
 
   @@unique([comicId, episodeNumber])
+}
+
+model EpisodeImage {
+  id        String @id @default(uuid())
+  episodeId String
+  imageUrl  String
+  order     Int // ลำดับของภาพในตอน เช่น 1, 2, 3...
+
+  episode Episode @relation(fields: [episodeId], references: [id])
+
+  @@unique([episodeId, order])
+  @@index([episodeId])
 }
 
 model Bookmark {
@@ -130,19 +144,21 @@ model Bookmark {
 model Comment {
   id        String   @id @default(uuid())
   profileId String
-  episodeId String
+  episodeId String?
   content   String
   parentId  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   profile Profile   @relation(fields: [profileId], references: [id])
-  episode Episode   @relation(fields: [episodeId], references: [id])
+  episode Episode?  @relation(fields: [episodeId], references: [id])
   parent  Comment?  @relation("ReplyTo", fields: [parentId], references: [id])
   replies Comment[] @relation("ReplyTo")
+  Comic   Comic?    @relation(fields: [comicId], references: [id])
+  comicId String?
 
   @@index([parentId])
-  @@index([episodeId, parentId])
+  @@index([comicId, episodeId, parentId])
 }
 
 model Like {
