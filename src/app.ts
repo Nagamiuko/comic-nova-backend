@@ -20,7 +20,7 @@ app.use(
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to api service");
+  res.send("Welcome to api service v2");
 });
 app.use("/api", routes);
 app.use("/api", user);
