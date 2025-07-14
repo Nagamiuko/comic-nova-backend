@@ -11,7 +11,7 @@
     "postinstall": "prisma generate"
   },
   "_moduleAliases": {
-    "@": "src"
+    "@": "dist"
   },
   "keywords": [],
   "author": "",
