@@ -20,6 +20,7 @@
     "@aws-sdk/client-s3": "^3.844.0",
     "@prisma/client": "^6.11.1",
     "@types/nodemailer": "^6.4.17",
+    "@vercel/node": "^5.3.5",
     "aws-sdk": "^2.1692.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
