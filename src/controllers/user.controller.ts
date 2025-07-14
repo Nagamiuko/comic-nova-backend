@@ -1,8 +1,8 @@
-import { Request, Response } from "express"
-import { PrismaClient } from "@prisma/client"
-import { verifyAccessToken } from "@/utils/token"
+import { Request, Response, NextFunction } from "express";
+import { PrismaClient } from "@prisma/client";
+import { verifyAccessToken } from "@/utils/token";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 export async function getUsers(req: Request, res: Response) {
   try {
@@ -17,20 +17,20 @@ export async function getUsers(req: Request, res: Response) {
             username: true,
             displayName: true,
             avatarUrl: true,
-            role: true
-          }
-        }
-      }
-    })
-    res.json(users)
+            role: true,
+          },
+        },
+      },
+    });
+    res.json(users);
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ message: "Failed to fetch users" })
+    console.error(err);
+    res.status(500).json({ message: "Failed to fetch users" });
   }
 }
 
 export async function getUser(req: Request, res: Response) {
-  const { id } = req.params
+  const { id } = req.params;
   try {
     const user = await prisma.user.findUnique({
       where: { id },
@@ -44,53 +44,57 @@ export async function getUser(req: Request, res: Response) {
             username: true,
             displayName: true,
             avatarUrl: true,
-            role: true
-          }
-        }
-      }
-    })
+            role: true,
+          },
+        },
+      },
+    });
 
-    if (!user) return res.status(404).json({ message: "User not found" })
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.json(user)
+    res.json(user);
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ message: "Error fetching user" })
+    console.error(err);
+    res.status(500).json({ message: "Error fetching user" });
   }
 }
 
-export const userData = async (req, res, next) => {
-  const { userId } = req.query;
-  try {
-    const ids = verifyAccessToken(userId);
-    console.log(ids);
-    const user = await prisma.user.findFirst({
-      where: { id:  ids },
-      select: {
-        id: true,
-        email: true,
-        isVerified: true,
-        createdAt: true,
-        profile: {
-          select: {
-            username: true,
-            displayName: true,
-            avatarUrl: true,
-            role: true
-          }
-        }
-      }
-    })
-    if (!user) {
-      return next(new ErrorHandler("User doesn't exists", 400));
-    }
+// export const userData = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   const { userId } = req.query as any;
+//   try {
+//     const ids = verifyAccessToken(userId);
+//     console.log(ids);
+//     const user = await prisma.user.findFirst({
+//       where: { id: ids },
+//       select: {
+//         id: true,
+//         email: true,
+//         isVerified: true,
+//         createdAt: true,
+//         profile: {
+//           select: {
+//             username: true,
+//             displayName: true,
+//             avatarUrl: true,
+//             role: true,
+//           },
+//         },
+//       },
+//     });
+//     if (!user) {
+//       return next(new ErrorHandler("User doesn't exists", 400));
+//     }
 
-    res.status(200).json({
-      success: true,
-      user,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: error.message });
-  }
-};
+//     res.status(200).json({
+//       success: true,
+//       user,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json({ message: error.message });
+//   }
+// };
