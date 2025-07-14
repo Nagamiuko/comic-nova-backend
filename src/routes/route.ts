@@ -6,7 +6,7 @@ const router = Router();
 //   res.json({ status: "ok" });
 // });
 
-router.get("/status", (req: Request, res: Response) => {
+router.get("/", (req: Request, res: Response) => {
   res.json({ message: "welcome to api" });
 });
 
