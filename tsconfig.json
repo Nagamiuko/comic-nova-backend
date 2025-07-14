@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["./*"]
+    },
     "target": "ES2020",
     "module": "CommonJS",
-    "esModuleInterop": true,
-    "rootDir": ".",
-    "baseUrl": "./src",
+    "rootDir": "./src",
     "outDir": "./dist",
-    "paths": {
-      "@/*": ["*"]
-    },
     "strict": true,
+    "esModuleInterop": true,
     "skipLibCheck": true
-  },
-  "include": ["src", "api"]
+  }
 }
