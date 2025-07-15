@@ -21,6 +21,8 @@ export async function getComics(req: Request, res: Response): Promise<any> {
         coverUrl2: true,
         status: true,
         tags: true,
+        updatedAt:true,
+        createdAt:true,
         episodes: {
           select: {
             comicId: true,
