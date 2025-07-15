@@ -18,7 +18,7 @@ export async function getUsers(req: Request, res: Response) {
             displayName: true,
             avatarUrl: true,
             role: true,
-            accessToken:true
+            accessToken: true,
           },
         },
       },
@@ -30,7 +30,7 @@ export async function getUsers(req: Request, res: Response) {
   }
 }
 
-export async function getUser(req: Request, res: Response) {
+export async function getUser(req: Request, res: Response): Promise<any> {
   const { id } = req.params;
   try {
     const user = await prisma.user.findUnique({
@@ -46,6 +46,9 @@ export async function getUser(req: Request, res: Response) {
             displayName: true,
             avatarUrl: true,
             role: true,
+            likes: true,
+            coins: true,
+            transactions: true,
           },
         },
       },
