@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>☠️ ACCESS DENIED ☠️</title>
+    <style>
+      body {
+        background-color: #000;
+        color: #0f0;
+        font-family: monospace;
+        padding: 20px;
+      }
+      pre {
+        white-space: pre;
+        font-size: 16px;
+        line-height: 1.2;
+        padding: 20px;
+        border-radius: 8px;
+        max-width: 600px;
+        margin: auto;
+        text-align: center;
+      }
+      .blink {
+        animation: blink-red-white 1s steps(2, start) infinite;
+      }
+      @keyframes blink-red-white {
+        0%,
+        100% {
+          color: red;
+        }
+        50% {
+          color: white;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <pre id="ascii-container"></pre>
+
+    <script>
+      const art = `
++-----------------------------+
+|           ______            |
+|        .-'      '-.         |
+|       /            \\        |
+ |      |              |       | 
+|      |,  .-.  .-.  ,|       |
+|      | )(_o/  \\o_)( |       |
+|      |/     /\\     \\|       |
+|      (_     ^^     _)       |
+|       \\__|IIIIII|__/        |
+|        | \\IIIIII/  |        |
+|         \\\\       //         |
+ |          \\\\_____//          | 
+|                             |
+|   ☠️  ACCESS DENIED  ☠️    |
+| Unauthorized user detected. |
++-----------------------------+
+`;
+      document.addEventListener("contextmenu", (e) => e.preventDefault());
+      document.addEventListener("keydown", function (e) {
+        if (
+          e.key === "F12" ||
+          (e.ctrlKey &&
+            e.shiftKey &&
+            (e.key === "I" || e.key === "J" || e.key === "C")) ||
+          (e.ctrlKey && e.key === "U")
+        ) {
+          e.preventDefault();
+        }
+      });
+      setInterval(function () {
+        const before = new Date();
+        debugger;
+        const after = new Date();
+        if (after - before > 100) {
+          document.body.innerHTML =
+            '<h1 style="color:red;">DevTools is not allowed ❌</h1>';
+        }
+      }, 1000);
+
+      const container = document.getElementById("ascii-container");
+      const lines = art.trim().split("\n");
+      let index = 0;
+      function showNextLine() {
+        if (index < lines.length) {
+          container.textContent += lines[index] + "\n";
+          index++;
+          setTimeout(showNextLine, 200);
+        } else {
+          highlightBlink();
+        }
+      }
+
+      function highlightBlink() {
+        const contentLines = container.textContent.split("\n");
+        const targetIndex = contentLines.findIndex((line) =>
+          line.includes("ACCESS DENIED")
+        );
+        const targetIndex2 = contentLines.findIndex((line) =>
+          line.includes(" /            \ ")
+        );
+        if (targetIndex === -1) return;
+        contentLines[targetIndex] = contentLines[targetIndex].replace(
+          /(.*)/,
+          '<span class="blink">$1</span>'
+        );
+        container.innerHTML = contentLines.join("\n").replace(/\n/g, "<br>");
+      }
+      showNextLine();
+    </script>
+  </body>
+</html>

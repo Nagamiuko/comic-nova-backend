@@ -47,6 +47,8 @@ model RefreshToken {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   expiresAt DateTime
+
+  @@unique([userId, token])
 }
 
 model Profile {
@@ -56,6 +58,7 @@ model Profile {
   displayName String?
   avatarUrl   String?
   bio         String?
+  accessToken String?
   role        UserRole @default(user)
   coins       Int      @default(0)
   createdAt   DateTime @default(now())

@@ -2,6 +2,7 @@ import { login } from "@/controllers/auth/login";
 import { register } from "@/controllers/auth/register";
 import { verifyEmail } from "@/controllers/auth/verifyEmail";
 import { getUsers } from "@/controllers/user.controller";
+import { AuthenticationMiddleware } from "@/middleware/middleware";
 import { Router } from "express";
 
 const router = Router();
@@ -10,7 +11,7 @@ const router = Router();
 //   res.json({ status: "ok" });
 // });
 
-router.get("/users", getUsers)
+router.get("/users",AuthenticationMiddleware, getUsers)
 router.post("/user/register", register)
 router.post("/user/login", login)
 router.post("/verify-email", verifyEmail)
