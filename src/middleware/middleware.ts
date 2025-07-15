@@ -24,6 +24,13 @@ const art3 = `
 +-----------------------------+
 `;
 
+const accessDeniedPath = path.join(
+  __dirname,
+  "..",
+  "..",
+  "public",
+  "access-denied.html"
+);
 export const AuthenticationMiddleware = async (
   req: Request,
   res: Response,
@@ -34,13 +41,6 @@ export const AuthenticationMiddleware = async (
 
   try {
     console.log(clientkey);
-    const accessDeniedPath = path.join(
-      __dirname,
-      "..",
-      "..",
-      "public",
-      "access-denied.html"
-    );
 
     if (!clientkey) {
       if (/postman|curl|insomnia/i.test(ua)) {
@@ -77,8 +77,14 @@ export const SecretKeyAuthentication = async (
   next: NextFunction
 ): Promise<any> => {
   const secretkey = req.header("x-api-key");
+  const ua = req.headers["user-agent"] || "";
   try {
-    if (!secretkey) return res.status(401).send("Access Denied API KEY!!!");
+    if (!secretkey) {
+      if (/postman|curl|insomnia/i.test(ua)) {
+        return res.status(403).json(art3);
+      }
+      return res.status(401).sendFile(accessDeniedPath);
+    }
 
     if (secretkey && secretkey === process.env.API_KEY) {
       return next();
