@@ -33,8 +33,9 @@ export async function getUsers(req: Request, res: Response) {
 export async function getUser(req: Request, res: Response): Promise<any> {
   const { id } = req.params;
   try {
+    const userId: any = verifyAccessToken(id);
     const user = await prisma.user.findUnique({
-      where: { id },
+      where: { id: userId.id },
       select: {
         id: true,
         email: true,

@@ -18,7 +18,7 @@ export const generateRefreshToken = (userId: string) => {
 };
 
 export function verifyAccessToken(token: string) {
-  return jwt.verify(token, process.env.JWT_REFRESH_SECRET!);
+  return jwt.verify(token, process.env.JWT_SECRET!);
 }
 
 export const sendToken = (user: any, statusCode: number, res: Response) => {
@@ -26,7 +26,7 @@ export const sendToken = (user: any, statusCode: number, res: Response) => {
     { id: user.id, role: user.role },
     process.env.JWT_SECRET!,
     {
-      expiresIn: "1d",
+      expiresIn: "7d",
     }
   );
   const options: Opction = {
