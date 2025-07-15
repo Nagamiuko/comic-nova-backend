@@ -19,7 +19,7 @@ app.use((0, cors_1.default)({
 }));
 app.use(express_1.default.json());
 app.get("/", (req, res) => {
-    res.send("Welcome to api service");
+    res.send("Welcome to api service v2");
 });
 app.use("/api", route_1.default);
 app.use("/api", user_route_1.default);
