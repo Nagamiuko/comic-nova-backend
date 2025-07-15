@@ -57,7 +57,7 @@ export async function getUser(req: Request, res: Response): Promise<any> {
 
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.json(user);
+    res.json({ message: "Fecth user successful", data: user });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Error fetching user" });
