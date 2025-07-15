@@ -31,7 +31,7 @@ export async function getUsers(req: Request, res: Response) {
 }
 
 export async function getUser(req: Request, res: Response): Promise<any> {
-  const { id } = req.params;
+  const { id } = req.query as any;
   try {
     const userId: any = verifyAccessToken(id);
     const user = await prisma.user.findUnique({
