@@ -29,10 +29,11 @@ export const AuthenticationMiddleware = async (
   res: Response,
   next: NextFunction
 ): Promise<any> => {
-  const clientkey = req.header("Authorization")?.split(" ")[1];
+  const clientkey = req.header("Authorization")?.split(" ")[1] as any;
   const ua = req.headers["user-agent"] || "";
 
   try {
+    console.log(clientkey);
     const accessDeniedPath = path.join(
       __dirname,
       "..",
@@ -62,10 +63,11 @@ export const AuthenticationMiddleware = async (
     if (reCheck?.user.isVerified === false)
       return res.status(401).send("Please verify your identity !!!");
     if (reCheck && clientkey === reCheck.accessToken) {
-      return next("Authenticated Allow O..O");
+      return next();
     }
     return res.status(403).send(art3);
   } catch (err) {
+    console.log(err);
     return res.status(500).send("Invalid Client Key !!");
   }
 };

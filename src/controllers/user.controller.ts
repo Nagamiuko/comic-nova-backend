@@ -18,6 +18,7 @@ export async function getUsers(req: Request, res: Response) {
             displayName: true,
             avatarUrl: true,
             role: true,
+            accessToken:true
           },
         },
       },
