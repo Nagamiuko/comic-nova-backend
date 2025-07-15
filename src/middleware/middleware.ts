@@ -71,26 +71,20 @@ export const AuthenticationMiddleware = async (
     return res.status(500).send("Invalid Client Key !!");
   }
 };
-// export const SecretKeyAuthentication = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   const secretkey = req.header("x-api-key");
-//   console.log(secretkey);
+export const SecretKeyAuthentication = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<any> => {
+  const secretkey = req.header("x-api-key");
+  try {
+    if (!secretkey) return res.status(401).send("Access Denied API KEY!!!");
 
-//   try {
-//     if (!secretkey) return res.status(401).send("Access Denied API KEY!!!");
-//     const reCheck = await prismaService.user.findFirst({
-//       where: {
-//         secretkey: secretkey,
-//       },
-//     });
-//     if (reCheck && secretkey === reCheck.secretkey) {
-//       return next() && req.message(" Authenticated Allow !");
-//     }
-//     next();
-//   } catch (err) {
-//     return res.status(500).send("Invalid Secret Key !!");
-//   }
-// };
+    if (secretkey && secretkey === process.env.API_KEY) {
+      return next();
+    }
+    return res.status(403).send(art3);
+  } catch (err) {
+    return res.status(500).send("Invalid Secret Key !!");
+  }
+};

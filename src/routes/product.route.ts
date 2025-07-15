@@ -2,7 +2,7 @@ import { addEpisode } from "@/controllers/comic/addEpisode";
 import { getComics } from "@/controllers/comic/comic";
 import { comicDetail } from "@/controllers/comic/comicDetail";
 import { createComic } from "@/controllers/comic/createProduct";
-import { AuthenticationMiddleware } from "@/middleware/middleware";
+import { AuthenticationMiddleware, SecretKeyAuthentication } from "@/middleware/middleware";
 import { upload } from "@/utils/multer";
 import { Router } from "express";
 
@@ -18,8 +18,8 @@ router.post(
   AuthenticationMiddleware,
   createComic
 );
-router.get("/product", AuthenticationMiddleware, getComics);
-router.get("/product/detail", AuthenticationMiddleware, comicDetail);
+router.get("/product", SecretKeyAuthentication, getComics);
+router.get("/product/detail", SecretKeyAuthentication, comicDetail);
 router.post(
   "/product/add/episode",
   upload.array("image_episode"),

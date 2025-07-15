@@ -11,7 +11,7 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://laughing-space-giggle-x7v5gq6w99vc64jr-8080.app.github.dev",
+      "https://laughing-space-giggle-x7v5gq6w99vc64jr-8080.app.github.dev","http://localhost:3000",
     ],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
