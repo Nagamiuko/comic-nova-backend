@@ -21,8 +21,8 @@ export async function getComics(req: Request, res: Response): Promise<any> {
         coverUrl2: true,
         status: true,
         tags: true,
-        updatedAt:true,
-        createdAt:true,
+        updatedAt: true,
+        createdAt: true,
         episodes: {
           select: {
             comicId: true,
@@ -71,6 +71,7 @@ export async function getComics(req: Request, res: Response): Promise<any> {
             },
           },
         },
+        rankings: true,
         author: {
           select: {
             username: true,
