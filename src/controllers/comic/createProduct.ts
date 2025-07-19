@@ -13,27 +13,28 @@ type FolderKey = "1080x1920" | "1080x1080" | "others";
 interface KeyId {
   comicId?: string;
   userId?: string;
+  categoryId?: string;
 }
 
 export async function createComic(req: Request, res: Response): Promise<any> {
-  const { title, description, tags, status } = req.body;
+  const { title, description, tags, status, categoryId } = req.body;
   const { userId }: KeyId = req.query;
 
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
   if (!title) return res.status(400).json({ message: "Title is required" });
-
   const files = req.files as Express.Multer.File[];
   if (!files || files.length === 0)
     return res.status(400).json({ message: "No files uploaded" });
 
   try {
+    const profile = await prisma.profile.findUnique({ where: { userId } });
+    if (!profile) return res.status(404).json({ message: "Profile not found" });
+
     const result: Record<FolderKey, string[]> = {
       "1080x1920": [] as string[],
       "1080x1080": [] as string[],
       others: [] as string[],
     };
-
-    console.log(result);
 
     await Promise.all(
       files.map(async (file) => {
@@ -59,9 +60,12 @@ export async function createComic(req: Request, res: Response): Promise<any> {
       })
     );
 
-    const profile = await prisma.profile.findUnique({ where: { userId } });
-    if (!profile) return res.status(404).json({ message: "Profile not found" });
-
+    if (categoryId) {
+      await prisma.categories.update({
+        where: { id: categoryId },
+        data: { connt: { increment: 1 } },
+      });
+    }
     const comic = await prisma.comic.create({
       data: {
         title,
@@ -71,6 +75,10 @@ export async function createComic(req: Request, res: Response): Promise<any> {
         tags: tags ? JSON.parse(tags) : [],
         status: status || ComicStatus.ongoing,
         author: { connect: { id: profile.id } },
+        categorie: categoryId ? { connect: { id: categoryId } } : undefined,
+      },
+      include: {
+        categorie: true,
       },
     });
 

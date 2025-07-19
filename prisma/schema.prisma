@@ -88,6 +88,7 @@ model Comic {
   authorId String?
   author   Profile? @relation("AuthorComics", fields: [authorId], references: [id])
 
+  categorie Categories[]
   episodes  Episode[]
   bookmarks Bookmark[]
   likes     Like[]
@@ -126,6 +127,18 @@ model EpisodeImage {
 
   @@unique([episodeId, order])
   @@index([episodeId])
+}
+
+model Categories {
+  id      String  @id @default(uuid())
+  cid     String
+  name    String
+  icon    String
+  connt   Int     @default(0)
+  comicId String?
+  Comic   Comic?  @relation(fields: [comicId], references: [id])
+
+  @@index([comicId])
 }
 
 model Bookmark {
