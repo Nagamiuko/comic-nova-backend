@@ -85,7 +85,6 @@ export const SecretKeyAuthentication = async (
       }
       return res.status(401).sendFile(accessDeniedPath);
     }
-
     if (secretkey && secretkey === process.env.API_KEY) {
       return next();
     }

@@ -75,7 +75,7 @@ export async function createComic(req: Request, res: Response): Promise<any> {
         tags: tags ? JSON.parse(tags) : [],
         status: status || ComicStatus.ongoing,
         author: { connect: { id: profile.id } },
-        categorie: categoryId ? { connect: { id: categoryId } } : undefined,
+        categorie: categoryId ? { connect: [{ id: categoryId }] } : undefined,
       },
       include: {
         categorie: true,

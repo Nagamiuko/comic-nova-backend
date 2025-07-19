@@ -23,6 +23,15 @@ export async function getComics(req: Request, res: Response): Promise<any> {
         tags: true,
         updatedAt: true,
         createdAt: true,
+        categorie: {
+          select: {
+            id: true,
+            cid: true,
+            name: true,
+            icon: true,
+            connt: true,
+          },
+        },
         episodes: {
           select: {
             comicId: true,

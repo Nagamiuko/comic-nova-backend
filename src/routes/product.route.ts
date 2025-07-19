@@ -29,6 +29,8 @@ router.post(
   createComic
 );
 router.get("/product", SecretKeyAuthentication, getComics);
+router.get("/product.dev", AuthenticationMiddleware, getComics);
+router.get("/product.dev/detail", AuthenticationMiddleware, comicDetail);
 router.get("/product/detail", SecretKeyAuthentication, comicDetail);
 router.post(
   "/product/add/episode",
