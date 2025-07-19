@@ -36,6 +36,8 @@ export async function createComic(req: Request, res: Response): Promise<any> {
       others: [] as string[],
     };
 
+    console.log(result);
+
     await Promise.all(
       files.map(async (file) => {
         const buffer = file.buffer || fs.readFileSync(file.path);
@@ -70,8 +72,14 @@ export async function createComic(req: Request, res: Response): Promise<any> {
       data: {
         title,
         description,
-        coverUrl1: result["1080x1080"],
-        coverUrl2: result["1080x1920"],
+        coverUrl1:
+          result["1080x1080"].length > 0
+            ? result["1080x1080"]
+            : result["others"],
+        coverUrl2:
+          result["1080x1920"].length > 0
+            ? result["1080x1920"]
+            : result["others"],
         tags: tags ? JSON.parse(tags) : [],
         status: status || ComicStatus.ongoing,
         author: { connect: { id: profile.id } },

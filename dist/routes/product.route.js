@@ -1,0 +1,26 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const addEpisode_1 = require("@/controllers/comic/addEpisode");
+const categories_1 = require("@/controllers/comic/categories");
+const comic_1 = require("@/controllers/comic/comic");
+const comicDetail_1 = require("@/controllers/comic/comicDetail");
+const createProduct_1 = require("@/controllers/comic/createProduct");
+const middleware_1 = require("@/middleware/middleware");
+const multer_1 = require("@/utils/multer");
+const express_1 = require("express");
+const router = (0, express_1.Router)();
+// router.get("/health", (req: Request, res: Response) => {
+//   res.json({ status: "ok" });
+// });
+router.post("/product/add", multer_1.upload.array("covercomic", 2), middleware_1.AuthenticationMiddleware, createProduct_1.createComic);
+router.get("/product", middleware_1.SecretKeyAuthentication, comic_1.getComics);
+router.get("/product.dev", middleware_1.AuthenticationMiddleware, comic_1.getComics);
+router.get("/product.dev/detail", middleware_1.AuthenticationMiddleware, comicDetail_1.comicDetail);
+router.get("/product/detail", middleware_1.SecretKeyAuthentication, comicDetail_1.comicDetail);
+router.post("/product/add/episode", multer_1.upload.array("image_episode"), middleware_1.AuthenticationMiddleware, addEpisode_1.addEpisode);
+router.get("/categories", categories_1.getAllCategories);
+router.get("/categorie", categories_1.getCategoryById);
+router.post("/categorie/add", categories_1.createCategory);
+router.put("/categorie/update", categories_1.updateCategory);
+router.delete("/categorie/remove", categories_1.deleteCategory);
+exports.default = router;
