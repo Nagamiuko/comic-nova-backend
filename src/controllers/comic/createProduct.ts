@@ -65,7 +65,7 @@ export async function createComic(req: Request, res: Response): Promise<any> {
     if (categoryId) {
       await prisma.categories.update({
         where: { id: categoryId },
-        data: { connt: { increment: 1 } },
+        data: { count: { increment: 1 } },
       });
     }
     const comic = await prisma.comic.create({

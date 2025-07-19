@@ -30,7 +30,7 @@ export async function getComics(req: Request, res: Response): Promise<any> {
             cid: true,
             name: true,
             icon: true,
-            connt: true,
+            count: true,
           },
         },
         episodes: {

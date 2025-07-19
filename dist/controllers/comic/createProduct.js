@@ -31,6 +31,7 @@ async function createComic(req, res) {
             "1080x1080": [],
             others: [],
         };
+        console.log(result);
         await Promise.all(files.map(async (file) => {
             const buffer = file.buffer || fs_1.default.readFileSync(file.path);
             const image = (0, sharp_1.default)(buffer);
@@ -50,15 +51,19 @@ async function createComic(req, res) {
         if (categoryId) {
             await prisma.categories.update({
                 where: { id: categoryId },
-                data: { connt: { increment: 1 } },
+                data: { count: { increment: 1 } },
             });
         }
         const comic = await prisma.comic.create({
             data: {
                 title,
                 description,
-                coverUrl1: result["1080x1080"],
-                coverUrl2: result["1080x1920"],
+                coverUrl1: result["1080x1080"].length > 0
+                    ? result["1080x1080"]
+                    : result["others"],
+                coverUrl2: result["1080x1920"].length > 0
+                    ? result["1080x1920"]
+                    : result["others"],
                 tags: tags ? JSON.parse(tags) : [],
                 status: status || client_1.ComicStatus.ongoing,
                 author: { connect: { id: profile.id } },

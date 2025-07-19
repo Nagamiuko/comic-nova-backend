@@ -24,7 +24,7 @@ async function getComics(req, res) {
                         cid: true,
                         name: true,
                         icon: true,
-                        connt: true,
+                        count: true,
                     },
                 },
                 episodes: {
