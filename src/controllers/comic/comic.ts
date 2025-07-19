@@ -16,6 +16,7 @@ export async function getComics(req: Request, res: Response): Promise<any> {
     const comic = await prisma.comic.findMany({
       select: {
         id: true,
+        title:true,
         description: true,
         coverUrl1: true,
         coverUrl2: true,
