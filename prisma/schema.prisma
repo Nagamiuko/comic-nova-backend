@@ -130,11 +130,12 @@ model EpisodeImage {
 }
 
 model Categories {
-  id    String @id @default(uuid())
-  cid   String
-  name  String
-  icon  String
-  connt Int    @default(0)
+  id     String  @id @default(uuid())
+  cid    String
+  name   String
+  icon   String
+  color  String
+  connt  Int     @default(0)
   comics Comic[] @relation("ComicCategories")
 }
 

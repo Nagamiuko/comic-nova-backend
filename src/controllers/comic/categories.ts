@@ -36,10 +36,10 @@ export const getCategoryById = async (
 
 // POST /categories
 export const createCategory = async (req: Request, res: Response) => {
-  const { cid, name, icon, connt } = req.body;
+  const { cid, name, icon, connt, color } = req.body;
   try {
     const newCategory = await prisma.categories.create({
-      data: { cid, name, icon, connt },
+      data: { cid, name, icon, connt, color },
     });
     res.status(201).json({ success: true, data: newCategory });
   } catch (err) {
@@ -49,12 +49,12 @@ export const createCategory = async (req: Request, res: Response) => {
 
 // PUT /categories/:id
 export const updateCategory = async (req: Request, res: Response) => {
-  const { name, icon, connt, comicId } = req.body;
+  const { name, icon, connt, color } = req.body;
   const { cId } = req.query as any;
   try {
     const updated = await prisma.categories.update({
       where: { id: cId },
-      data: { name, icon, connt },
+      data: { name, icon, connt, color },
     });
     res.json({ success: true, data: updated });
   } catch (err) {
