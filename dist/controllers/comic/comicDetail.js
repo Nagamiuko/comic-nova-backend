@@ -71,7 +71,7 @@ async function comicDetail(req, res) {
         if (!comic) {
             return res.status(404).json({ message: "Comic not found" });
         }
-        return res.json(comic);
+        return res.status(200).json({ message: "Fetch comic detail", data: comic });
     }
     catch (error) {
         console.error("comicDetail error:", error);

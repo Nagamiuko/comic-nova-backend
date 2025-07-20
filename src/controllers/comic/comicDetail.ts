@@ -76,7 +76,7 @@ export async function comicDetail(req: Request, res: Response): Promise<any> {
       return res.status(404).json({ message: "Comic not found" });
     }
 
-    return res.json(comic);
+    return res.status(200).json({ message: "Fetch comic detail", data: comic });
   } catch (error) {
     console.error("comicDetail error:", error);
     return res.status(500).json({ message: "Failed to fetch comic detail" });
