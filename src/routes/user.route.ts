@@ -7,7 +7,10 @@ import {
   getUsers,
   getWriters,
 } from "@/controllers/user.controller";
-import { AuthenticationMiddleware } from "@/middleware/middleware";
+import {
+  AuthenticationMiddleware,
+  SecretKeyAuthentication,
+} from "@/middleware/middleware";
 import { Router } from "express";
 
 const router = Router();
@@ -18,7 +21,7 @@ const router = Router();
 
 router.get("/users", AuthenticationMiddleware, getUsers);
 router.get("/user", AuthenticationMiddleware, getUser);
-router.get("/user/writers", AuthenticationMiddleware, getWriters);
+router.get("/user/writers", SecretKeyAuthentication, getWriters);
 router.post("/user/register", register);
 router.post("/user/login", login);
 router.post("/verify-email", verifyEmail);
