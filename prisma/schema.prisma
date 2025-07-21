@@ -70,6 +70,8 @@ model Profile {
   comments     Comment[]
   likes        Like[]
   transactions CoinTransaction[]
+  followers    Follower[]        @relation("followers")
+  following    Follower[]        @relation("following")
 }
 
 model Comic {
@@ -214,4 +216,15 @@ model Ranking {
   comic Comic @relation(fields: [comicId], references: [id])
 
   @@unique([comicId, rankType, periodStart])
+}
+
+model Follower {
+  id          String @id @default(uuid())
+  followerId  String
+  followingId String
+
+  follower  Profile @relation("following", fields: [followerId], references: [id])
+  following Profile @relation("followers", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
 }
