@@ -103,9 +103,13 @@ export async function getWriters(req: Request, res: Response): Promise<any> {
             likeCount: true,
             episodes: {
               select: {
+                comicId: true,
                 id: true,
-                viewCount: true,
-                updatedAt: true,
+                title: true,
+                episodeNumber: true,
+                type: true,
+                coinCost: true,
+                createdAt: true,
               },
               orderBy: {
                 updatedAt: "desc",
