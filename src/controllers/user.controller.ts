@@ -77,6 +77,20 @@ export async function getWriters(req: Request, res: Response): Promise<any> {
         role: true,
         likes: true,
         bio: true,
+        followers: {
+          select: {
+            id: true,
+            followerId: true,
+            following: {
+              select: {
+                id: true,
+                username: true,
+                displayName: true,
+                avatarUrl: true,
+              },
+            },
+          },
+        },
         comics: {
           select: {
             id: true,
